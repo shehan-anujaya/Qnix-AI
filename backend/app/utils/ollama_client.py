@@ -11,7 +11,7 @@ import json
 # Ollama configuration
 OLLAMA_BASE_URL = "http://localhost:11434"
 EMBEDDING_MODEL = "nomic-embed-text"
-CHAT_MODEL = "qwen2.5:3b"  # Using qwen2.5:3b as it's more commonly available
+CHAT_MODEL = "qwen3:8b"  # Using qwen2.5:3b as it's more commonly available
 
 
 async def generate_embeddings(text: str, model: str = EMBEDDING_MODEL) -> List[float]:

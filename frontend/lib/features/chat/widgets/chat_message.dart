@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:frontend_flutter/core/constants/app_colors.dart';
 
 /// Chat message widget
@@ -47,13 +48,57 @@ class ChatMessage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        message,
-                        style: const TextStyle(
-                          color: AppColors.textPrimary,
-                          fontSize: 14,
-                          height: 1.5,
+                      MarkdownBody(
+                        data: message,
+                        styleSheet: MarkdownStyleSheet(
+                          p: const TextStyle(
+                            color: AppColors.textPrimary,
+                            fontSize: 14,
+                            height: 1.5,
+                          ),
+                          strong: const TextStyle(
+                            color: AppColors.textPrimary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          em: const TextStyle(
+                            color: AppColors.textPrimary,
+                            fontStyle: FontStyle.italic,
+                          ),
+                          code: TextStyle(
+                            backgroundColor: AppColors.background,
+                            color: AppColors.accent,
+                            fontFamily: 'monospace',
+                            fontSize: 13,
+                          ),
+                          codeblockDecoration: BoxDecoration(
+                            color: AppColors.background,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: AppColors.border),
+                          ),
+                          blockquote: const TextStyle(
+                            color: AppColors.textSecondary,
+                            fontStyle: FontStyle.italic,
+                          ),
+                          h1: const TextStyle(
+                            color: AppColors.textPrimary,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          h2: const TextStyle(
+                            color: AppColors.textPrimary,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          h3: const TextStyle(
+                            color: AppColors.textPrimary,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          listBullet: const TextStyle(
+                            color: AppColors.accent,
+                          ),
                         ),
+                        selectable: true,
                       ),
                       if (sources != null && sources!.isNotEmpty) ...[
                         const SizedBox(height: 12),

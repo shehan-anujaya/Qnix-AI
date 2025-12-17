@@ -62,7 +62,11 @@ class _ChatScreenState extends State<ChatScreen> {
         _messages.add({
           'message': response['answer'],
           'isUser': false,
-          'sources': response['sources'],
+          'sources': response['sources'] != null 
+              ? List<Map<String, dynamic>>.from(
+                  (response['sources'] as List).map((item) => item as Map<String, dynamic>)
+                )
+              : null,
           'timestamp': DateTime.now(),
         });
         _isLoading = false;
