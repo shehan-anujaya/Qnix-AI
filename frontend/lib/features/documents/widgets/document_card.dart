@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_flutter/core/constants/app_colors.dart';
 
-/// Document card widget
-class DocumentCard extends StatelessWidget {
+/// Modern Document Card with Hover Effects and Click to View
+class DocumentCard extends StatefulWidget {
   final String filename;
   final String uploadDate;
   final double sizeMb;
   final VoidCallback? onDelete;
+  final VoidCallback? onView;
 
   const DocumentCard({
     super.key,
@@ -14,93 +15,233 @@ class DocumentCard extends StatelessWidget {
     required this.uploadDate,
     required this.sizeMb,
     this.onDelete,
+    this.onView,
   });
 
   @override
+  State<DocumentCard> createState() => _DocumentCardState();
+}
+
+class _DocumentCardState extends State<DocumentCard> {
+  bool _isHovered = false;
+
+  @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            // PDF Icon
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: AppColors.error.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Icon(
-                Icons.picture_as_pdf,
-                color: AppColors.error,
-                size: 24,
-              ),
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: GestureDetector(
+        onTap: widget.onView,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeInOut,
+          margin: const EdgeInsets.only(bottom: 12),
+          decoration: BoxDecoration(
+            color: _isHovered ? AppColors.surfaceLight : AppColors.surface,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: _isHovered ? AppColors.primary.withOpacity(0.5) : AppColors.border,
+              width: 1,
             ),
-            
-            const SizedBox(width: 16),
-            
-            // Document Info
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    filename,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
+            boxShadow: _isHovered
+                ? [
+                    BoxShadow(
+                      color: AppColors.primaryGlow,
+                      blurRadius: 16,
+                      spreadRadius: 2,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                  ]
+                : null,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              children: [
+                // Modern PDF Icon
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: _isHovered
+                          ? [AppColors.primary, AppColors.accent]
+                          : [
+                              AppColors.primary.withOpacity(0.2),
+                              AppColors.accent.withOpacity(0.15),
+                            ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(14),
+                    boxShadow: _isHovered
+                        ? [
+                            BoxShadow(
+                              color: AppColors.primaryGlow,
+                              blurRadius: 12,
+                              spreadRadius: 1,
+                            ),
+                          ]
+                        : null,
                   ),
-                  const SizedBox(height: 4),
-                  Row(
+                  child: Icon(
+                    Icons.picture_as_pdf_rounded,
+                    color: _isHovered ? Colors.white : AppColors.primary,
+                    size: 28,
+                  ),
+                ),
+                
+                const SizedBox(width: 20),
+                
+                // Document Info
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(
-                        Icons.calendar_today,
-                        size: 12,
-                        color: AppColors.textTertiary,
-                      ),
-                      const SizedBox(width: 4),
                       Text(
-                        _formatDate(uploadDate),
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: AppColors.textSecondary,
+                        widget.filename,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: _isHovered ? AppColors.primary : AppColors.textPrimary,
+                          letterSpacing: -0.2,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(width: 16),
-                      const Icon(
-                        Icons.storage,
-                        size: 12,
-                        color: AppColors.textTertiary,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        '${sizeMb.toStringAsFixed(2)} MB',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: AppColors.textSecondary,
-                        ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.backgroundElevated,
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(
+                                color: AppColors.divider,
+                                width: 1,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.calendar_today_rounded,
+                                  size: 12,
+                                  color: AppColors.textTertiary,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  _formatDate(widget.uploadDate),
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    color: AppColors.textSecondary,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.backgroundElevated,
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(
+                                color: AppColors.divider,
+                                width: 1,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.storage_rounded,
+                                  size: 12,
+                                  color: AppColors.textTertiary,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  '${widget.sizeMb.toStringAsFixed(2)} MB',
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    color: AppColors.textSecondary,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
+                ),
+                
+                // Actions
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // View Button
+                    if (widget.onView != null)
+                      Tooltip(
+                        message: 'View PDF',
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.primary.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: AppColors.primary.withOpacity(0.3),
+                              width: 1,
+                            ),
+                          ),
+                          child: IconButton(
+                            onPressed: widget.onView,
+                            icon: const Icon(Icons.visibility_rounded),
+                            color: AppColors.primary,
+                            iconSize: 20,
+                            tooltip: '',
+                          ),
+                        ),
+                      ),
+                    
+                    if (widget.onView != null && widget.onDelete != null)
+                      const SizedBox(width: 8),
+                    
+                    // Delete Button
+                    if (widget.onDelete != null)
+                      Tooltip(
+                        message: 'Delete',
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.error.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: AppColors.error.withOpacity(0.3),
+                              width: 1,
+                            ),
+                          ),
+                          child: IconButton(
+                            onPressed: widget.onDelete,
+                            icon: const Icon(Icons.delete_rounded),
+                            color: AppColors.error,
+                            iconSize: 20,
+                            tooltip: '',
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ],
             ),
-            
-            // Actions
-            if (onDelete != null)
-              IconButton(
-                onPressed: onDelete,
-                icon: const Icon(Icons.delete_outline),
-                color: AppColors.error,
-                tooltip: 'Delete document',
-              ),
-          ],
+          ),
         ),
       ),
     );

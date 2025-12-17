@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../core/constants/app_colors.dart';
 
-/// Sidebar navigation widget for desktop layout
-class SidebarNavigation extends StatelessWidget {
+/// Modern Minimal Sidebar Navigation - Black Matte Design
+class SidebarNavigation extends StatefulWidget {
   final int selectedIndex;
   final Function(int) onNavigationChanged;
 
@@ -13,119 +13,92 @@ class SidebarNavigation extends StatelessWidget {
   });
 
   @override
+  State<SidebarNavigation> createState() => _SidebarNavigationState();
+}
+
+class _SidebarNavigationState extends State<SidebarNavigation> {
+  int? _hoveredIndex;
+
+  @override
   Widget build(BuildContext context) {
     return Container(
-      width: 280,
-      decoration: const BoxDecoration(
+      width: 72,
+      decoration: BoxDecoration(
         color: AppColors.surface,
         border: Border(
           right: BorderSide(color: AppColors.divider, width: 1),
         ),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // App Header
-          Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [AppColors.primary, AppColors.accent],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Icon(
-                        Icons.school_rounded,
-                        color: Colors.white,
-                        size: 24,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    const Text(
-                      'Qnix AI',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Knowledge Archive',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: AppColors.textSecondary,
-                  ),
+          const SizedBox(height: 20),
+          
+          // App Logo
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [AppColors.primary, AppColors.accent],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(14),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.primaryGlow,
+                  blurRadius: 12,
+                  spreadRadius: 2,
                 ),
               ],
             ),
+            child: const Icon(
+              Icons.auto_awesome_rounded,
+              color: Colors.white,
+              size: 24,
+            ),
           ),
           
-          const Divider(height: 1),
-          
+          const SizedBox(height: 32),
+          const Divider(height: 1, indent: 16, endIndent: 16),
           const SizedBox(height: 16),
           
           // Navigation Items
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              children: [
-                _NavigationItem(
-                  icon: Icons.chat_bubble_outline_rounded,
-                  label: 'Chat',
-                  isSelected: selectedIndex == 0,
-                  onTap: () => onNavigationChanged(0),
-                ),
-                const SizedBox(height: 4),
-                _NavigationItem(
-                  icon: Icons.folder_outlined,
-                  label: 'Documents',
-                  isSelected: selectedIndex == 1,
-                  onTap: () => onNavigationChanged(1),
-                ),
-                const SizedBox(height: 4),
-                _NavigationItem(
-                  icon: Icons.settings_outlined,
-                  label: 'Settings',
-                  isSelected: selectedIndex == 2,
-                  onTap: () => onNavigationChanged(2),
-                ),
-              ],
-            ),
+          _buildNavItem(
+            index: 0,
+            icon: Icons.chat_bubble_rounded,
+            label: 'Chat',
+          ),
+          const SizedBox(height: 8),
+          _buildNavItem(
+            index: 1,
+            icon: Icons.description_rounded,
+            label: 'Documents',
+          ),
+          const SizedBox(height: 8),
+          _buildNavItem(
+            index: 2,
+            icon: Icons.settings_rounded,
+            label: 'Settings',
           ),
           
-          // Footer
-          const Divider(height: 1),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
+          const Spacer(),
+          
+          // Status Indicator
+          Container(
+            margin: const EdgeInsets.only(bottom: 20),
+            child: Column(
               children: [
                 Container(
-                  width: 8,
-                  height: 8,
-                  decoration: const BoxDecoration(
-                    color: AppColors.success,
-                    shape: BoxShape.circle,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppColors.backgroundElevated,
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                ),
-                const SizedBox(width: 8),
-                const Text(
-                  'Backend Connected',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: AppColors.textSecondary,
+                  child: Icon(
+                    Icons.check_circle_rounded,
+                    color: AppColors.success,
+                    size: 20,
                   ),
                 ),
               ],
@@ -135,54 +108,65 @@ class SidebarNavigation extends StatelessWidget {
       ),
     );
   }
-}
 
-class _NavigationItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final bool isSelected;
-  final VoidCallback onTap;
+  Widget _buildNavItem({
+    required int index,
+    required IconData icon,
+    required String label,
+  }) {
+    final isSelected = widget.selectedIndex == index;
+    final isHovered = _hoveredIndex == index;
 
-  const _NavigationItem({
-    required this.icon,
-    required this.label,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            color: isSelected ? AppColors.primary.withOpacity(0.15) : Colors.transparent,
-            borderRadius: BorderRadius.circular(12),
-            border: isSelected
-                ? Border.all(color: AppColors.primary.withOpacity(0.3), width: 1)
-                : null,
-          ),
-          child: Row(
-            children: [
-              Icon(
-                icon,
-                size: 22,
-                color: isSelected ? AppColors.primary : AppColors.textSecondary,
-              ),
-              const SizedBox(width: 12),
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                  color: isSelected ? AppColors.primary : AppColors.textSecondary,
-                ),
-              ),
-            ],
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hoveredIndex = index),
+      onExit: (_) => setState(() => _hoveredIndex = null),
+      child: Tooltip(
+        message: label,
+        preferBelow: false,
+        child: GestureDetector(
+          onTap: () => widget.onNavigationChanged(index),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeInOut,
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              gradient: isSelected
+                  ? LinearGradient(
+                      colors: [
+                        AppColors.primary.withOpacity(0.2),
+                        AppColors.accent.withOpacity(0.15),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    )
+                  : null,
+              color: isHovered && !isSelected
+                  ? AppColors.surfaceHover
+                  : Colors.transparent,
+              borderRadius: BorderRadius.circular(14),
+              border: isSelected
+                  ? Border.all(color: AppColors.primary, width: 1.5)
+                  : null,
+              boxShadow: isSelected
+                  ? [
+                      BoxShadow(
+                        color: AppColors.primaryGlow,
+                        blurRadius: 8,
+                        spreadRadius: 1,
+                      ),
+                    ]
+                  : null,
+            ),
+            child: Icon(
+              icon,
+              size: 24,
+              color: isSelected
+                  ? AppColors.primary
+                  : isHovered
+                      ? AppColors.textPrimary
+                      : AppColors.textSecondary,
+            ),
           ),
         ),
       ),

@@ -25,3 +25,9 @@ python-dotenv==1.0.0
 
 # Utilities
 aiofiles==23.2.1
+
+# Visualization (for 3D embedding viewer)
+plotly==5.24.1
+scikit-learn==1.5.2
+pandas==2.2.3
+numpy==2.1.3

@@ -36,7 +36,7 @@ class ChatMessage extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
-                    color: isUser ? AppColors.userMessage : AppColors.aiMessage,
+                    color: isUser ? AppColors.primary.withOpacity(0.1) : AppColors.background,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
                       color: isUser 

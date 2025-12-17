@@ -3,9 +3,10 @@ import 'package:file_picker/file_picker.dart';
 import '../../core/constants/app_colors.dart';
 import '../../services/api_service.dart';
 import '../../widgets/loading_indicator.dart';
+import '../pdf_viewer/pdf_viewer_screen.dart';
 import 'widgets/document_card.dart';
 
-/// Documents screen for managing PDFs
+/// Modern Documents Screen for Managing PDFs
 class DocumentsScreen extends StatefulWidget {
   const DocumentsScreen({super.key});
 
@@ -203,6 +204,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                             filename: doc['filename'] ?? 'Unknown',
                             uploadDate: doc['upload_date'] ?? '',
                             sizeMb: (doc['size_mb'] ?? 0).toDouble(),
+                            onView: () => _viewDocument(doc),
                             onDelete: () => _deleteDocument(
                               doc['id'] ?? '',
                               doc['filename'] ?? 'Unknown',
@@ -212,6 +214,33 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                       ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _viewDocument(Map<String, dynamic> doc) {
+    // Get the file path from the document data
+    final filePath = doc['file_path'] as String?;
+    final filename = doc['filename'] as String? ?? 'Unknown';
+    
+    if (filePath == null || filePath.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Unable to locate the PDF file'),
+          backgroundColor: AppColors.error,
+        ),
+      );
+      return;
+    }
+
+    // Navigate to PDF viewer
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PdfViewerScreen(
+          filePath: filePath,
+          filename: filename,
+        ),
       ),
     );
   }
