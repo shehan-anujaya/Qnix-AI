@@ -32,62 +32,32 @@ class _DocumentCardState extends State<DocumentCard> {
       onExit: (_) => setState(() => _isHovered = false),
       child: GestureDetector(
         onTap: widget.onView,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeInOut,
+        child: Container(
           margin: const EdgeInsets.only(bottom: 12),
           decoration: BoxDecoration(
-            color: _isHovered ? AppColors.surfaceLight : AppColors.surface,
-            borderRadius: BorderRadius.circular(16),
+            color: _isHovered ? AppColors.surfaceHover : AppColors.surface,
+            borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: _isHovered ? AppColors.primary.withOpacity(0.5) : AppColors.border,
+              color: _isHovered ? AppColors.primary.withOpacity(0.3) : AppColors.border,
               width: 1,
             ),
-            boxShadow: _isHovered
-                ? [
-                    BoxShadow(
-                      color: AppColors.primaryGlow,
-                      blurRadius: 16,
-                      spreadRadius: 2,
-                    ),
-                  ]
-                : null,
           ),
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Row(
               children: [
-                // Modern PDF Icon
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  width: 56,
-                  height: 56,
+                // PDF Icon
+                Container(
+                  width: 48,
+                  height: 48,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: _isHovered
-                          ? [AppColors.primary, AppColors.accent]
-                          : [
-                              AppColors.primary.withOpacity(0.2),
-                              AppColors.accent.withOpacity(0.15),
-                            ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(14),
-                    boxShadow: _isHovered
-                        ? [
-                            BoxShadow(
-                              color: AppColors.primaryGlow,
-                              blurRadius: 12,
-                              spreadRadius: 1,
-                            ),
-                          ]
-                        : null,
+                    color: AppColors.primary.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.picture_as_pdf_rounded,
-                    color: _isHovered ? Colors.white : AppColors.primary,
-                    size: 28,
+                    color: AppColors.primary,
+                    size: 24,
                   ),
                 ),
                 

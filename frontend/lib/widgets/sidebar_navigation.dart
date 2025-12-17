@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../core/constants/app_colors.dart';
 
-/// Modern Minimal Sidebar Navigation - Black Matte Design
-class SidebarNavigation extends StatefulWidget {
+/// Professional Sidebar Navigation
+class SidebarNavigation extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onNavigationChanged;
 
@@ -13,16 +13,9 @@ class SidebarNavigation extends StatefulWidget {
   });
 
   @override
-  State<SidebarNavigation> createState() => _SidebarNavigationState();
-}
-
-class _SidebarNavigationState extends State<SidebarNavigation> {
-  int? _hoveredIndex;
-
-  @override
   Widget build(BuildContext context) {
     return Container(
-      width: 72,
+      width: 240,
       decoration: BoxDecoration(
         color: AppColors.surface,
         border: Border(
@@ -30,75 +23,96 @@ class _SidebarNavigationState extends State<SidebarNavigation> {
         ),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 20),
-          
-          // App Logo
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [AppColors.primary, AppColors.accent],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(14),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.primaryGlow,
-                  blurRadius: 12,
-                  spreadRadius: 2,
+          // App Header
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              children: [
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(
+                    Icons.school_rounded,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Qnix AI',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-            child: const Icon(
-              Icons.auto_awesome_rounded,
-              color: Colors.white,
-              size: 24,
+          ),
+          
+          const Divider(height: 1),
+          const SizedBox(height: 12),
+          
+          // Navigation Items
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              children: [
+                _NavigationItem(
+                  icon: Icons.chat_bubble_outline_rounded,
+                  label: 'Chat',
+                  isSelected: selectedIndex == 0,
+                  onTap: () => onNavigationChanged(0),
+                ),
+                const SizedBox(height: 4),
+                _NavigationItem(
+                  icon: Icons.folder_outlined,
+                  label: 'Documents',
+                  isSelected: selectedIndex == 1,
+                  onTap: () => onNavigationChanged(1),
+                ),
+                const SizedBox(height: 4),
+                _NavigationItem(
+                  icon: Icons.settings_outlined,
+                  label: 'Settings',
+                  isSelected: selectedIndex == 2,
+                  onTap: () => onNavigationChanged(2),
+                ),
+              ],
             ),
           ),
           
-          const SizedBox(height: 32),
-          const Divider(height: 1, indent: 16, endIndent: 16),
-          const SizedBox(height: 16),
-          
-          // Navigation Items
-          _buildNavItem(
-            index: 0,
-            icon: Icons.chat_bubble_rounded,
-            label: 'Chat',
-          ),
-          const SizedBox(height: 8),
-          _buildNavItem(
-            index: 1,
-            icon: Icons.description_rounded,
-            label: 'Documents',
-          ),
-          const SizedBox(height: 8),
-          _buildNavItem(
-            index: 2,
-            icon: Icons.settings_rounded,
-            label: 'Settings',
-          ),
-          
-          const Spacer(),
-          
-          // Status Indicator
-          Container(
-            margin: const EdgeInsets.only(bottom: 20),
-            child: Column(
+          // Status Footer
+          const Divider(height: 1),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(12),
+                  width: 8,
+                  height: 8,
                   decoration: BoxDecoration(
-                    color: AppColors.backgroundElevated,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(
-                    Icons.check_circle_rounded,
                     color: AppColors.success,
-                    size: 20,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                const Text(
+                  'Connected',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppColors.textSecondary,
                   ),
                 ),
               ],
@@ -108,64 +122,69 @@ class _SidebarNavigationState extends State<SidebarNavigation> {
       ),
     );
   }
+}
 
-  Widget _buildNavItem({
-    required int index,
-    required IconData icon,
-    required String label,
-  }) {
-    final isSelected = widget.selectedIndex == index;
-    final isHovered = _hoveredIndex == index;
+class _NavigationItem extends StatefulWidget {
+  final IconData icon;
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
 
+  const _NavigationItem({
+    required this.icon,
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  State<_NavigationItem> createState() => _NavigationItemState();
+}
+
+class _NavigationItemState extends State<_NavigationItem> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
     return MouseRegion(
-      onEnter: (_) => setState(() => _hoveredIndex = index),
-      onExit: (_) => setState(() => _hoveredIndex = null),
-      child: Tooltip(
-        message: label,
-        preferBelow: false,
-        child: GestureDetector(
-          onTap: () => widget.onNavigationChanged(index),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            curve: Curves.easeInOut,
-            width: 48,
-            height: 48,
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: widget.onTap,
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             decoration: BoxDecoration(
-              gradient: isSelected
-                  ? LinearGradient(
-                      colors: [
-                        AppColors.primary.withOpacity(0.2),
-                        AppColors.accent.withOpacity(0.15),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    )
-                  : null,
-              color: isHovered && !isSelected
-                  ? AppColors.surfaceHover
-                  : Colors.transparent,
-              borderRadius: BorderRadius.circular(14),
-              border: isSelected
-                  ? Border.all(color: AppColors.primary, width: 1.5)
-                  : null,
-              boxShadow: isSelected
-                  ? [
-                      BoxShadow(
-                        color: AppColors.primaryGlow,
-                        blurRadius: 8,
-                        spreadRadius: 1,
-                      ),
-                    ]
-                  : null,
+              color: widget.isSelected 
+                  ? AppColors.primary.withOpacity(0.15) 
+                  : _isHovered 
+                      ? AppColors.surfaceHover 
+                      : Colors.transparent,
+              borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(
-              icon,
-              size: 24,
-              color: isSelected
-                  ? AppColors.primary
-                  : isHovered
-                      ? AppColors.textPrimary
+            child: Row(
+              children: [
+                Icon(
+                  widget.icon,
+                  size: 20,
+                  color: widget.isSelected 
+                      ? AppColors.primary 
                       : AppColors.textSecondary,
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  widget.label,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: widget.isSelected ? FontWeight.w600 : FontWeight.w500,
+                    color: widget.isSelected 
+                        ? AppColors.primary 
+                        : AppColors.textSecondary,
+                  ),
+                ),
+              ],
             ),
           ),
         ),
