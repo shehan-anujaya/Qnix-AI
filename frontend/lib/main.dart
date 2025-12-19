@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
+import 'package:provider/provider.dart';
 import 'app.dart';
+import 'core/theme/theme_provider.dart';
 
 /// Main entry point for Qnix AI Desktop Application
 void main() async {
@@ -24,5 +26,10 @@ void main() async {
     await windowManager.focus();
   });
   
-  runApp(const QnixApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ThemeProvider(),
+      child: const QnixApp(),
+    ),
+  );
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../services/api_service.dart';
+import '../../core/theme/theme_provider.dart';
 
 /// Settings screen
 class SettingsScreen extends StatefulWidget {
@@ -41,26 +43,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: Column(
         children: [
           // Header
           Container(
             padding: const EdgeInsets.all(24),
-            decoration: const BoxDecoration(
-              color: AppColors.surface,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
               border: Border(
-                bottom: BorderSide(color: AppColors.divider, width: 1),
+                bottom: BorderSide(color: Theme.of(context).dividerColor, width: 1),
               ),
             ),
-            child: const Row(
+            child: Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.settings_outlined,
                   color: AppColors.primary,
                   size: 28,
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -69,14 +71,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     Text(
                       'Configure your application',
                       style: TextStyle(
                         fontSize: 13,
-                        color: AppColors.textSecondary,
+                        color: Theme.of(context).textTheme.bodySmall?.color,
                       ),
                     ),
                   ],
@@ -90,6 +92,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: ListView(
               padding: const EdgeInsets.all(24),
               children: [
+                // Appearance
+                _buildSection(
+                  title: 'Appearance',
+                  children: [
+                    Card(
+                      child: SwitchListTile(
+                        title: const Text(
+                          'Light Mode',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        subtitle: const Text('Enable bright interface'),
+                        value: context.watch<ThemeProvider>().isLight,
+                        onChanged: (val) => context.read<ThemeProvider>().toggleLight(val),
+                        secondary: const Icon(Icons.light_mode),
+                      ),
+                    ),
+                  ],
+                ),
+
                 // System Status
                 _buildSection(
                   title: 'System Status',
@@ -138,7 +162,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            color: AppColors.textPrimary,
+            color: Colors.black87,
           ),
         ),
         const SizedBox(height: 12),

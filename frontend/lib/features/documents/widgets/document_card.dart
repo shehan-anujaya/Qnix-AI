@@ -195,7 +195,7 @@ class _DocumentCardState extends State<DocumentCard> {
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(
                               color: AppColors.error.withOpacity(0.3),
-                              width: 1,
+                              width: 1, 
                             ),
                           ),
                           child: IconButton(
